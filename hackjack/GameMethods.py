@@ -119,4 +119,4 @@ def serialize_table(table_name):
 	return cur_table_dict
 
 	#Sample Output
-	# {"status": "not_started", "turn": 0, "players": [{"status": "stay", "money": 400, "cards": ["AH", "2S"], "display_name": "Usmann2", "bet": 100}, {"status": "stay", "money": 900, "cards": ["AH", "2S"], "display_name": "Usmann1", "bet": 100}], "name": "scrubTable", "current_starting_player": 0}
+	# {"status": "not_started", "turn": 0, "players": [{"status": "stayed", "money": 400, "cards": ["AH", "2S"], "display_name": "Usmann2", "bet": 100}, {"status": "stayed", "money": 900, "cards": ["AH", "2S"], "display_name": "Usmann1", "bet": 100}], "name": "scrubTable", "current_starting_player": 0}

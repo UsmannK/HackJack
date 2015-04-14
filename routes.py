@@ -23,9 +23,7 @@ def tables(table_name):
 
 	#GET routing
 	if request.method == 'GET':
-		print 'here'
 		if requested_table is None:
-			print 'in here'
 			return json.dumps(table_not_found)
 		else:
 			return serialize_table(table_name)

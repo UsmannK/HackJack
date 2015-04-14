@@ -3,7 +3,7 @@ import logging
 from flask import Flask, request, abort
 from hackjack.models import *
 import json
-from hackjack.errs import *
+from hackjack.consts import *
 from hackjack.GameMethods import *
 
 
@@ -40,7 +40,7 @@ def tables(table_name):
 		#implicit else:
 		if not is_player_turn(request.form['username'], requested_table):
 			if cmd is 'join':
-				join(request.form['username'], requested_table) #TODO: FIXIT: Make table states: not_started, betting, between rounds
+				join(request.form['username'], requested_table) #TODO: FIXIT: Make table states: not_started, betting, between_rounds
 			if is_in_table(request.form['username'], requested_table):
 				return json.dumps(wait_your_damn_turn)
 			return json.dumps(join_the_game)

@@ -3,6 +3,7 @@ from hackjack.models import *
 from hackjack.consts import *
 import hackjack.mongo_to_dict as jsonHelper
 import json
+from threading import Timer
 
 def authenticate(passed_uname, passed_pwd):
 	users = User.objects
@@ -42,8 +43,8 @@ def create(username, table_name):
 	table_admin.display_name = username
 	table_admin.money = 100
 	table_admin.cards = []
-	table_admin.status = 'waiting'
 	table_admin.status_code=0
+	table_admin.status = player_status_codes[table_admin.status_code]
 	table_admin.bet=0
 	table_admin.doubled_down=False
 
@@ -61,8 +62,19 @@ def create(username, table_name):
 	table.save()
 	return table
 
-def start():
-	pass
+def start(username, table_name):
+	table = find_table(table_name)
+	players = table.players
+
+	for player in players:
+		player.status_code=1
+		player.status=player_status_codes[player.status_code]
+
+	table.status_code=1
+	table.table_status = table_status_codes[table.table_status_code]
+
+	t = Timer(10.0, check_bets_and_continue(table))
+	t.start() # after 10 seconds, unplaced bets will be minimum
 
 def join():
 	pass
@@ -79,6 +91,19 @@ def bet():
 def double_down():
 	pass
 
+def check_bets_and_continue(table):
+	if table.status_code == 1:
+		players = table.players
+
+		for player in players:
+			player.status_code=3
+			player.status=player_status_codes[player.status_code]
+			if player.bet == 0:
+				player.bet = table.min_bet
+				player.money -= player.bet
+
+
+	
 
 def serialize_table(table_name):
 	cur_table = table_name

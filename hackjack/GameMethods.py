@@ -37,20 +37,29 @@ def is_player_turn(passed_uname, table):
 #Finish testing following methods on local branch before pushing
 
 def create(username, table_name):
+	#Initialize table admin
+	table_admin = Player()
+	table_admin.display_name = username
+	table_admin.money = 100
+	table_admin.cards = []
+	table_admin.status = 'waiting'
+	table_admin.status_code=0
+	table_admin.bet=0
+	table_admin.doubled_down=False
+
+	#Initialize table
 	table = Table()
 	table.table_name = table_name
+	table.table_admin_name = username
 	table.table_status_code = 0
 	table.table_status = table_status_codes[table.table_status_code]
-
-	pass
-
-	# class Table(db.Document):
- #    table_name = db.StringField(max_length=15, required=True)
- #    table_status = db.StringField(required=True)
- #    players = db.ListField(db.EmbeddedDocumentField('Player', required=True), required=True)
- #    turn_index = db.IntField(min_value=1, required=True)
- #    turn_name = db.StringField(required=True)
- #    curStart = db.IntField(min_value=1, max_value=5)
+	table.players = [table_admin]
+	table.turn_index=[0]
+	table.turn_name=table_admin.display_name
+	table.curStart=0
+	table.min_bet=5
+	table.save()
+	return table
 
 def start():
 	pass

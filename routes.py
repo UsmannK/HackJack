@@ -34,7 +34,8 @@ def tables(table_name):
 
 		if requested_table is None:
 			if cmd is 'create':
-				return create(request.form['username'], table_name)
+				create(request.form['username'], table_name)
+				return serialize_table(table_name)
 			return json.dumps(table_not_found)
 
 		#implicit else:

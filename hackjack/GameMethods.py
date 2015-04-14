@@ -33,7 +33,35 @@ def find_table(table_name):
 	return None
 
 def is_player_turn(passed_uname, table):
-	return passed_uname == table.players[table.turn_index].display_name
+	return passed_uname == table.turn_name.display_name
+
+def is_in_table(username, table):
+	for player in table.players:
+		if player.display_name == username:
+			return True
+	return False
+
+def check_bets_and_continue(table):
+	if table.status_code == 1:
+		players = table.players
+
+		for player in players:
+			player.status_code=3
+			player.status=player_status_codes[player.status_code]
+			if player.bet == 0:
+				player.bet = table.min_bet
+				player.money -= player.bet
+
+def create_player(username):
+	player = Player()
+	player.display_name = username
+	player.money = 100
+	player.cards = []
+	player.status_code=0
+	player.status = player_status_codes[player.status_code]
+	player.bet=0
+	player.doubled_down=False
+	return player
 
 #Finish testing following methods on local branch before pushing
 
@@ -62,8 +90,7 @@ def create(username, table_name):
 	table.save()
 	return table
 
-def start(username, table_name):
-	table = find_table(table_name)
+def start(username, table):
 	players = table.players
 
 	for player in players:
@@ -73,11 +100,20 @@ def start(username, table_name):
 	table.status_code=1
 	table.table_status = table_status_codes[table.table_status_code]
 
-	t = Timer(10.0, check_bets_and_continue(table))
-	t.start() # after 10 seconds, unplaced bets will be minimum
+	table.save()
 
-def join():
-	pass
+	t = Timer(10.0, check_bets_and_continue(table))
+	t.start()
+	return success_table_started
+
+def join(username, table):
+	# table = find_table(table_name)
+	if not table.status_code == 0:
+		return game_in_progress_join
+
+	table.players.append(create_player(username))
+	table.save()
+	return serialize_table(table)
 
 def hit():
 	pass
@@ -91,21 +127,10 @@ def bet():
 def double_down():
 	pass
 
-def check_bets_and_continue(table):
-	if table.status_code == 1:
-		players = table.players
-
-		for player in players:
-			player.status_code=3
-			player.status=player_status_codes[player.status_code]
-			if player.bet == 0:
-				player.bet = table.min_bet
-				player.money -= player.bet
-
 
 	
 
-def serialize_table(table_name):
+def serialize_table(table):
 	cur_table = table_name
 	cur_table_dict = {}
 	cur_table_dict['name'] = cur_table.table_name
@@ -116,7 +141,7 @@ def serialize_table(table_name):
 	for player in cur_table.players:
 		player_list.append(jsonHelper.jsonify(player))
 	cur_table_dict['players'] = player_list
-	return cur_table_dict
+	return json.dumps(cur_table_dict)
 
 	#Sample Output
 	# {"status": "not_started", "turn": 0, "players": [{"status": "stayed", "money": 400, "cards": ["AH", "2S"], "display_name": "Usmann2", "bet": 100}, {"status": "stayed", "money": 900, "cards": ["AH", "2S"], "display_name": "Usmann1", "bet": 100}], "name": "scrubTable", "current_starting_player": 0}

@@ -26,7 +26,7 @@ def tables(table_name):
 		if requested_table is None:
 			return json.dumps(table_not_found)
 		else:
-			return serialize_table(table_name)
+			return serialize_table(requested_table)
 
 	#POST routing
 	if request.method == 'POST':
@@ -35,7 +35,7 @@ def tables(table_name):
 		if requested_table is None:
 			if cmd is 'create':
 				create(request.form['username'], table_name)
-				return serialize_table(table_name)
+				return serialize_table(requested_table)
 			return json.dumps(table_not_found)
 
 		#implicit else:

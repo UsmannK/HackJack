@@ -4,6 +4,7 @@ from flask import Flask, request, abort
 from hackjack.models import *
 import json
 from hackjack.errs import *
+from hackjack.GameMethods import *
 
 
 app = Flask(__name__)
@@ -13,17 +14,18 @@ stream_handler.setLevel(logging.INFO)
 app.logger.addHandler(stream_handler)
 
 
-@app.route("/tables/<string:table_name>", methods=['POST'])
+@app.route("/tables/<table_name>", methods=['POST', 'GET'])
 def tables(table_name):
-	#Always authenticate requests
-	if not authenticate(request.form['username'], request.form['password']):
-		abort(401)
+	# if not authenticate(request.form['username'], request.form['password']):
+	# 	abort(401)
 
 	requested_table = find_table(table_name)
 
 	#GET routing
 	if request.method == 'GET':
+		print 'here'
 		if requested_table is None:
+			print 'in here'
 			return json.dumps(table_not_found)
 		else:
 			return serialize_table(table_name)

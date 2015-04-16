@@ -16,8 +16,15 @@ app.logger.addHandler(stream_handler)
 
 @app.route("/tables/<table_name>", methods=['POST', 'GET'])
 def tables(table_name):
-	# if not authenticate(request.form['username'], request.form['password']):
-	# 	abort(401)
+	if 'username' not in request.form or 'password' not in request.form:
+		return json.dumps(provide_auth)
+	if 'admin' in request.form and 'password' in request.form:
+		if not authenticate(request.form['admin'], request.form['password']):
+			abort(401)
+	else:
+		if not authenticate(request.form['username'], request.form['password']):
+			abort(401)
+
 
 	requested_table = find_table(table_name)
 
@@ -30,12 +37,13 @@ def tables(table_name):
 
 	#POST routing
 	if request.method == 'POST':
+		if not 'command' in request.form:
+			return json.dumps('supply_command')
 		cmd = request.form['command']
 
 		if requested_table is None:
 			if cmd is 'create':
-				create(request.form['username'], table_name)
-				return serialize_table(requested_table)
+				return create(request.form['username'], table_name)
 			return json.dumps(table_not_found)
 
 		#implicit else:
@@ -57,6 +65,8 @@ def tables(table_name):
 			return start(request.form['username'], requested_table)
 		elif cmd == 'double down':
 			return double_down(request.form['username'], requested_table)
+		else:
+			return serialize_table(requested_table)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

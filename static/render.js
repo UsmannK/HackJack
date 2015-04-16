@@ -15,8 +15,8 @@ var resize = function() {
 
 var render = function() {
 	$('.rendercard').each(function(index, el) {
-		var value = $(el).data('value').charAt(0);
-		var suit = $(el).data('value').charAt(1);
+		var value = $(el).data('value').substring(0, $(el).data('value').length - 1);;
+		var suit = $(el).data('value').charAt($(el).data('value').length-1);
 		console.log('value: ' + value + ', suit: ' + suit);
 		if (suit === 'H' || suit === 'D')
 			$(el).addClass('redCard');

@@ -123,7 +123,7 @@ def start(username, table):
 	for player in players:
 		player.status_code=1
 		player.status=player_status_codes[player.status_code]
-		player.save()
+		#player.save()
 
 	table.table_status_code=1
 	table.table_status = table_status_codes[table.table_status_code]

@@ -42,7 +42,7 @@ def tables(table_name):
 			return json.dumps(supply_command)
 		cmd = request.form['command']
 
-		if requested_table is None:
+		if requested_table == None:
 			if cmd == 'create':
 				return create(request.form['username'], table_name)
 			return json.dumps(table_not_found)

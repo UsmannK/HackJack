@@ -9,10 +9,10 @@ $colors: (turquoise #1ABC9C) (green-sea #16A085) (emerald #2ECC71) (nephritis #2
     $hex: nth($color, 2);
 
     .t-#{$name} {
-        color: $hex;
+        color: $hex !important;
     }
     .b-#{$name} {
-        background-color: $hex;
+        background-color: $hex !important;
     }
 }
 
@@ -154,6 +154,13 @@ input {
                 float: left;
                 padding-right: 1em;
                 box-sizing: border-box;
+
+                .table-object {
+                    width: 100%;
+                    padding: 1em;
+                    box-sizing: border-box;
+                    overflow: scroll;
+                }
             }
             .col-2 {
                 display: inline-block;
@@ -206,14 +213,25 @@ input {
 
     .box-header {
         width: 100%;
-        height: 4em;
-        background-color: color(orange);
+        // height: 4em;
+        background-color: color(silver);
         padding: 0.8em 1em;
         box-sizing: border-box;
 
         .title {
             font-size: 2em;
             margin: 0;
+
+        }
+        p {
+            .chips {
+                font-weight: 200;
+                text-align: right;
+            }
+            margin: 0;
+            .bet {
+                color: color(alizarin);
+            }
         }
     }
 
@@ -242,13 +260,6 @@ input {
                 &:nth-child(2) {
                     top: 0;
                     right: 0;
-                }
-
-                &.extracard {
-                    position: absolute;
-                    top: 36px;
-                    left: 0;
-                    width: 45%;
                 }
 
                 &.hidden::after {

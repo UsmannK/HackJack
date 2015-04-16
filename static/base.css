@@ -321,124 +321,124 @@ td, th {
   padding: 0; }
 
 .t-turquoise {
-  color: #1ABC9C; }
+  color: #1ABC9C !important; }
 
 .b-turquoise {
-  background-color: #1ABC9C; }
+  background-color: #1ABC9C !important; }
 
 .t-green-sea {
-  color: #16A085; }
+  color: #16A085 !important; }
 
 .b-green-sea {
-  background-color: #16A085; }
+  background-color: #16A085 !important; }
 
 .t-emerald {
-  color: #2ECC71; }
+  color: #2ECC71 !important; }
 
 .b-emerald {
-  background-color: #2ECC71; }
+  background-color: #2ECC71 !important; }
 
 .t-nephritis {
-  color: #27AE60; }
+  color: #27AE60 !important; }
 
 .b-nephritis {
-  background-color: #27AE60; }
+  background-color: #27AE60 !important; }
 
 .t-peter-river {
-  color: #3498DB; }
+  color: #3498DB !important; }
 
 .b-peter-river {
-  background-color: #3498DB; }
+  background-color: #3498DB !important; }
 
 .t-belize-hole {
-  color: #2980B9; }
+  color: #2980B9 !important; }
 
 .b-belize-hole {
-  background-color: #2980B9; }
+  background-color: #2980B9 !important; }
 
 .t-wet-asphalt {
-  color: #34495E; }
+  color: #34495E !important; }
 
 .b-wet-asphalt {
-  background-color: #34495E; }
+  background-color: #34495E !important; }
 
 .t-midnight-blue {
-  color: #2C3E50; }
+  color: #2C3E50 !important; }
 
 .b-midnight-blue {
-  background-color: #2C3E50; }
+  background-color: #2C3E50 !important; }
 
 .t-amethyst {
-  color: #9B59B6; }
+  color: #9B59B6 !important; }
 
 .b-amethyst {
-  background-color: #9B59B6; }
+  background-color: #9B59B6 !important; }
 
 .t-wisteria {
-  color: #8E44AD; }
+  color: #8E44AD !important; }
 
 .b-wisteria {
-  background-color: #8E44AD; }
+  background-color: #8E44AD !important; }
 
 .t-sunflower {
-  color: #F1C40F; }
+  color: #F1C40F !important; }
 
 .b-sunflower {
-  background-color: #F1C40F; }
+  background-color: #F1C40F !important; }
 
 .t-orange {
-  color: #F39C12; }
+  color: #F39C12 !important; }
 
 .b-orange {
-  background-color: #F39C12; }
+  background-color: #F39C12 !important; }
 
 .t-carrot {
-  color: #E67E22; }
+  color: #E67E22 !important; }
 
 .b-carrot {
-  background-color: #E67E22; }
+  background-color: #E67E22 !important; }
 
 .t-pumpkin {
-  color: #D35400; }
+  color: #D35400 !important; }
 
 .b-pumpkin {
-  background-color: #D35400; }
+  background-color: #D35400 !important; }
 
 .t-alizarin {
-  color: #E74C3C; }
+  color: #E74C3C !important; }
 
 .b-alizarin {
-  background-color: #E74C3C; }
+  background-color: #E74C3C !important; }
 
 .t-pomegranate {
-  color: #C0392B; }
+  color: #C0392B !important; }
 
 .b-pomegranate {
-  background-color: #C0392B; }
+  background-color: #C0392B !important; }
 
 .t-clouds {
-  color: #ECF0F1; }
+  color: #ECF0F1 !important; }
 
 .b-clouds {
-  background-color: #ECF0F1; }
+  background-color: #ECF0F1 !important; }
 
 .t-silver {
-  color: #BDC3C7; }
+  color: #BDC3C7 !important; }
 
 .b-silver {
-  background-color: #BDC3C7; }
+  background-color: #BDC3C7 !important; }
 
 .t-concrete {
-  color: #95A5A6; }
+  color: #95A5A6 !important; }
 
 .b-concrete {
-  background-color: #95A5A6; }
+  background-color: #95A5A6 !important; }
 
 .t-asbestos {
-  color: #7F8C8D; }
+  color: #7F8C8D !important; }
 
 .b-asbestos {
-  background-color: #7F8C8D; }
+  background-color: #7F8C8D !important; }
 
 html {
   font-family: "futura-pt"; }
@@ -539,6 +539,11 @@ input {
         float: left;
         padding-right: 1em;
         box-sizing: border-box; }
+        .tableview .content .row .col-1 .table-object {
+          width: 100%;
+          padding: 1em;
+          box-sizing: border-box;
+          overflow: scroll; }
       .tableview .content .row .col-2 {
         display: inline-block;
         -webkit-box-flex: 9;
@@ -581,13 +586,19 @@ input {
   margin-bottom: 2em; }
   .box .box-header {
     width: 100%;
-    height: 4em;
-    background-color: #F39C12;
+    background-color: #BDC3C7;
     padding: 0.8em 1em;
     box-sizing: border-box; }
     .box .box-header .title {
       font-size: 2em;
       margin: 0; }
+    .box .box-header p {
+      margin: 0; }
+      .box .box-header p .chips {
+        font-weight: 200;
+        text-align: right; }
+      .box .box-header p .bet {
+        color: #E74C3C; }
   .box .cards {
     padding: 1em;
     box-sizing: border-box; }
@@ -605,11 +616,6 @@ input {
         .box .cards .wrapper .card:nth-child(2) {
           top: 0;
           right: 0; }
-        .box .cards .wrapper .card.extracard {
-          position: absolute;
-          top: 36px;
-          left: 0;
-          width: 45%; }
         .box .cards .wrapper .card.hidden::after {
           content: "";
           position: absolute;

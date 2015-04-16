@@ -328,7 +328,11 @@ def end_round(table):
 	else:
 		table.curStart += 1
 	table.save()
-	start_new_round(table) #TODO
+
+	t = Timer(10.0, start_new_round, [table])
+	t.start()
+
+	# start_new_round(table) #TODO
 
 def start_new_round(table):
 	players = table.players

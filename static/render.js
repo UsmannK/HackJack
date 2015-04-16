@@ -1,6 +1,9 @@
+var previousData;
+
 $(document).ready(function() {
 	render();
 	resize();
+	livereload();
 });
 
 var resize = function() {
@@ -22,10 +25,8 @@ var render = function() {
 			$(el).addClass('redCard');
 		else
 			$(el).addClass('blackCard')
-		$(el).append('<span>'+value+getSuitSymbol(suit)+'</span><span>'+value+getSuitSymbol(suit)+'</span>');
+		$(el).html('').append('<span>'+value+getSuitSymbol(suit)+'</span><span>'+value+getSuitSymbol(suit)+'</span>');
 	});
-
-
 }
 
 var getSuitSymbol = function(ch) {
@@ -41,4 +42,89 @@ var getSuitSymbol = function(ch) {
 		default:
 			return
 	}
+}
+
+var livereload = function() {
+	getData();
+	var interval = window.setInterval(function() {
+		getData();
+	}, 1000);
+}
+
+var getData = function(cb) {
+	$.post(window.location.href, function( data ) {
+		if (data != previousData) {
+			previousData = data;
+			refresh(JSON.parse(data));
+		}
+	});
+}
+
+var refresh = function(data) {
+	$('.json-beautify').html(JSON.stringify(data, undefined, 4));
+
+	$('#dealerBox').html(renderDealerHtml(data.dealer));
+	render();
+	resize();
+	$('.players').html('');
+	data.players.forEach(function(el, index, array) {
+		$('.players').append(renderPlayerHtml(el));
+		render();
+		resize();
+	});
+}
+
+var renderDealerHtml = function(dealer) {
+	var dealerHtml = '';
+	dealerHtml += '<div class="box">';
+	dealerHtml += '	<div class="box-header">';
+	dealerHtml += '		<h2 class="title">DEALER</h2>';
+	dealerHtml += '	</div>';
+	dealerHtml += '	<div class="box-body">';
+	if (dealer && dealer.cards) {
+		dealerHtml += '			<div class="cards">';
+		dealerHtml += '				<div class="wrapper">';
+		dealer.cards.forEach(function(card, index, array) {
+			if (card === 'secret')
+				dealerHtml += '					<div class="card hidden"></div>';
+			else
+				dealerHtml += '					<div class="card rendercard" data-value="'+card+'"></div>';
+		});
+		dealerHtml += '				</div>';
+		dealerHtml += '			</div>';
+	}
+	dealerHtml += '	</div>';
+	dealerHtml += '</div>';
+	return dealerHtml;
+}
+
+var renderPlayerHtml = function(el) {
+	var playerHtml = '';
+	playerHtml += '<div class="box">';
+	playerHtml += '	<div class="box-header';
+	if (el.status === 'currently turn')
+		playerHtml += ' b-orange';
+	playerHtml += '">';
+	playerHtml += '		<h2 class="title">'+el.display_name+'&nbsp;&nbsp;&nbsp;</h2>';
+	playerHtml += '     <p><span class="chips">$'+el.money+'</span> <span class="chips bet">($'+el.bet+')</span></p>';
+	playerHtml += '	</div>';
+	playerHtml += '	<div class="box-body';
+	if (el.status === 'currently turn')
+		playerHtml += ' b-sunflower';
+	playerHtml += '">';
+	if (el.cards) {
+		playerHtml += '			<div class="cards">';
+		playerHtml += '				<div class="wrapper">';
+		el.cards.forEach(function(card, index, array) {
+			if (index < 2)
+				playerHtml += '					<div class="card rendercard" data-value="'+card+'"></div>';
+			else
+				playerHtml += '					<div class="card rendercard" style="top: '+36*(index-1)+'px;" data-value="'+card+'"></div>';
+		})
+		playerHtml += '				</div>';
+		playerHtml += '			</div>';
+	}
+	playerHtml += '	</div>';
+	playerHtml += '</div>';
+	return playerHtml;
 }

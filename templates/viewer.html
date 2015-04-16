@@ -21,46 +21,24 @@
 			<div class="content">
 				<div class="row">
 					<div class="col-1">
-						<div class="box">
-							<div class="box-header">
-								<h2 class="title">DEALER</h2>
-							</div>
-							<div class="box-body">
-								<div class="cards">
-									<div class="wrapper">
-										<div class="card rendercard hidden" data-value="{{ table.dealer.cards[0] }}"></div>
-										<div class="card rendercard" data-value="{{ table.dealer.cards[1] }}"></div>
-									</div>
-								</div>
-							</div>
+						<div id="dealerBox">
 						</div>
 						<div class="box">
 							<div class="box-header">
 								<h2 class="title">LOGS</h2>
 							</div>
 							<div class="box-body">
-								logs n shit
+								<div class="table-object">
+									<pre class="json-beautify">
+										{{ table_object }}
+									</pre>
+								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col-2">
 						<div class="wrapper">
 							<div class="players">
-								{% for player in table.players %}
-									<div class="box">
-										<div class="box-header">
-											<h2 class="title">{{ player.display_name }}</h2>
-										</div>
-										<div class="box-body">
-											<div class="cards">
-												<div class="wrapper">
-													<div class="card rendercard" data-value="{{ player.cards[0] }}"></div>
-													<div class="card rendercard" data-value="{{ player.cards[1] }}"></div>
-												</div>
-											</div>
-										</div>
-									</div>
-								{% endfor %}
 							</div>
 						</div>
 					</div>

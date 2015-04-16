@@ -57,7 +57,7 @@ def tables(table_name):
 			return json.dumps(supply_command)
 		cmd = request.form['command']
 
-		if requested_table is None:
+		if requested_table == None:
 			if cmd == 'create':
 				return create(request.form['username'], table_name)
 			return json.dumps(table_not_found)
@@ -69,14 +69,15 @@ def tables(table_name):
 			if is_in_table(request.form['username'], requested_table):
 				return json.dumps(wait_your_damn_turn)
 			return json.dumps(join_the_game)
-
 		#implicit else
 		if cmd == 'hit':
 			return hit(request.form['username'], requested_table)
 		elif cmd == 'stay':
 			return stay(request.form['username'], requested_table)
 		elif cmd == 'bet':
-			return bet(request.form['username'], int(request.form['bet_amt']), requested_table)
+			if not 'bet_amt' in request.form:
+				return json.dumps(give_bet_amt)
+			return bet(request.form['username'], request.form['bet_amt'], requested_table)
 		elif cmd == 'start':
 			return start(request.form['username'], requested_table)
 		elif cmd == 'double down':

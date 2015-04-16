@@ -58,25 +58,25 @@ def deal_cards(table):
 	table.save()
 
 def check_bets_and_continue(table):
-	if table.table_status_code == 1:
-		players = table.players
-
-		for player in players:
-			if player.status_code == 1:
-				player.status_code=3
-				player.status=player_status_codes[player.status_code]
-				if player.bet == 0:
-					player.bet = table.min_bet
-					player.money -= player.bet
-				player.save()
-
+	players = table.players
+	for player in players:
+		if player.status_code == 1:
+			player.status_code=3
+			player.status=player_status_codes[player.status_code]
+			if player.bet == 0:
+				player.bet = table.min_bet
+				player.money -= player.bet
+				#player.save()
+	table.table_status_code=2
+	table.table_status=table_status_codes[table.table_status_code]
 	table.save()
 	deal_cards(table)
 	first_player = table.players[table.curStart]
 	first_player.status_code=2
 	first_player.status=player_status_codes[first_player.status_code]
-	first_player.save()
+	#first_player.save()
 	table.save()
+	return
 
 def create_player(username):
 	player = Player()
@@ -118,20 +118,24 @@ def create(username, table_name):
 	return serialize_table(table)
 
 def start(username, table):
-	players = table.players
+	if table.table_status_code != 0:
+		return json.dumps(game_in_progress_start)
 
+	players = table.players
+	# return "3"
 	for player in players:
 		player.status_code=1
-		player.status=player_status_codes[player.status_code]
+		player.status=player_status_codes[1]
 		#player.save()
-
+	# print "4"
 	table.table_status_code=1
 	table.table_status = table_status_codes[table.table_status_code]
-
+	# print "5"
 	table.save()
-
-	t = Timer(15.0, check_bets_and_continue(table))
-	t.start()
+	# print "6"
+	# t = Timer(15.0, check_bets_and_continue(table))
+	# t.start()
+	check_bets_and_continue(table)
 	return json.dumps(success_table_started)
 
 def join(username, table):
@@ -162,10 +166,12 @@ def hit(username, table):
 		cur_player.status_code = 3
 		cur_player.status=player_status_codes[player.status_code]
 
-	cur_player.save()
+	#cur_player.save()
 	table.save()
 
 	next_turn(table)
+
+	return serialize_table(table)
 
 def stay(username, table):
 	cur_player = None
@@ -178,29 +184,33 @@ def stay(username, table):
 
 	cur_player.status_code = 4
 	cur_player.status=player_status_codes[cur_player.status_code]
-	cur_player.save()
+	#cur_player.save()
 	table.save()
 
 	next_turn(table)
+	return serialize_table(table)
 
 
 def bet(username, amount, table):
 	cur_player = None
+	amount = int(amount)
 	for player in table.players:
 		if player.display_name == username:
 			cur_player = player
-	if table.status_code != 1:
+	if table.table_status_code != 1:
 		return json.dumps(cant_bet_placed)
 	if amount > cur_player.money:
 		return json.dumps(cant_bet_too_little_money)
 	if amount < table.min_bet and amount != cur_player.money:
 		return json.dumps(cant_bet_below_minimum)
 	cur_player.money -= amount
-	cur_player.bet = amount
+	cur_player.bet += amount
 
 	player.status_code=3
 	player.status=player_status_codes[player.status_code]
-	player.save()
+	#player.save()
+	table.save()
+	return serialize_table(table)
 
 def double_down(username, table):
 	cur_player = None
@@ -224,14 +234,17 @@ def double_down(username, table):
 		cur_player.status_code = 7
 		cur_player.status=player_status_codes[player.status_code]
 
-	cur_player.save()
+	#cur_player.save()
 	table.save()
 
 	next_turn(table)
 
+	return serialize_table(table)
+
 def next_turn(table):
-	if(len(table.players) == 1):
-		end_round()
+	if len(table.players) == 1:
+		if not table.players[0].status_code == 2:
+			end_round(table)
 		return
 
 	anyone_playing = False
@@ -250,11 +263,11 @@ def next_turn(table):
 			table.turn_name = player.display_name
 			player.status_code = 2
 			player.status=player_status_codes[player.status_code]
-			player.save()
+			#player.save()
 			table.save()
 			return
 
-	dealer_turn(table)
+	# dealer_turn(table)
 
 	for i in range(0, table.turn_index):
 		if table.players[i].status_code == 3:
@@ -263,7 +276,7 @@ def next_turn(table):
 			table.turn_name = player.display_name
 			player.status_code = 2
 			player.status=player_status_codes[player.status_code]
-			player.save()
+			#player.save()
 			table.save()
 			return
 
@@ -271,7 +284,7 @@ def next_turn(table):
 
 def new_card(table):
 	card = card_vals[randint(0,len(card_vals)-1)] + card_suits[randint(0,len(card_suits)-1)]
-	while table.drawn_cards.count(card) < 3:
+	while table.drawn_cards.count(card) > 3:
 		card = card_vals[randint(0,len(card_vals)-1)] + card_suits[randint(0,len(card_suits)-1)]
 	table.drawn_cards.append(card)
 	table.save()
@@ -280,13 +293,13 @@ def new_card(table):
 def end_round(table):
 	dealer = table.dealer
 	dealer.flipped = False
-	table.status_code=3
-	table.table_status=table_status_code[table.status_code]
+	table.table_status_code=1
+	table.table_status=table_status_codes[table.table_status_code]
 
 	while card_eval(dealer.cards) < 17:
 		dealer.cards.append(new_card(table))
 
-	dealer.save()
+	#dealer.save()
 
 	dealerVal = card_eval(dealer.cards)
 
@@ -294,7 +307,8 @@ def end_round(table):
 		if player.status_code == 6:
 			player.bet = 0
 		else:
-			playerVal = card_eval(dealer.cards)
+			playerVal = card_eval(player.cards)
+			print str(playerVal) + "|" + str(dealerVal) + "|" + str(playerVal > dealerVal)
 			hasNatural = (playerVal == 21 and len(player.cards) == 2)
 
 			if dealerVal > 21 or dealerVal < playerVal:
@@ -307,7 +321,7 @@ def end_round(table):
 				player.money += player.bet
 
 		player.bet = 0
-		player.save()
+		#player.save()
 
 	if table.curStart == len(table.players)-1:
 		table.curStart = 0
@@ -328,24 +342,25 @@ def start_new_round(table):
 		if player.money <= 0:
 			player.status_code = 5
 			player.status = player_status_codes[player.status]
-			player.save()
+			#player.save()
 		else:
 			player.cards = []
 			player.doubled_down = False
 			player.status_code = 1
-			player.status = player_status_codes[player.status]
-			player.save()
+			player.status = player_status_codes[player.status_code]
+			#player.save()
 			playersLeft.append(player)
 
 	if len(playersLeft) == 1:
 		playersLeft[0].status_code = 8
 		playersLeft[0].status = player_status_codes[playersLeft[0].status_code]
-		table.status_code = 4
-		table.table_status = table_status_code[table.status_code]
+		table.table_status_code = 4
+		table.table_status = table_status_codes[table.table_status_code]
+		table.save()
 		return
 
 	table.min_bet += 5
-
+	table.save()
 	#deal_cards(table)
 	check_bets_and_continue(table)
 
@@ -357,7 +372,8 @@ def card_eval(card_list):
 			num_ace += 1
 			tot_val += 11
 		elif len(card) == 2 and ord(card[0]) <= ord('9'):
-			tot_val += ord(card[0])-ord('0')
+			print "imin with a " + card
+			tot_val += (ord(card[0])-ord('0'))
 		else:
 			tot_val += 10
 	if num_ace > 0 and tot_val > 21:
@@ -371,15 +387,16 @@ def serialize_table(table):
 	cur_table_dict['status'] = cur_table.table_status
 	cur_table_dict['current_starting_player'] = cur_table.curStart
 	cur_table_dict['turn'] = cur_table.turn_index
+	cur_table_dict['minimum_bet'] = cur_table.min_bet
 	player_list = []
 	for player in cur_table.players:
 		player_list.append(jsonHelper.jsonify(player))
 	cur_table_dict['players'] = player_list
 
-	if 'dealer' in cur_table_dict:
+	if table.dealer != None:
 		cur_table_dict['dealer'] = jsonHelper.jsonify(cur_table.dealer)
 		if cur_table.dealer.flipped:
-			cur_table_dict['dealer'][cards][0] = 'secret'
+			cur_table_dict['dealer']['cards'][0] = 'secret'
 	return json.dumps(cur_table_dict)
 
 	#Sample Output

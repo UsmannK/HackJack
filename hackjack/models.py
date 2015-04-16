@@ -5,7 +5,7 @@ from hackjack import db
 class Player(db.EmbeddedDocument):
     display_name = db.StringField(max_length=255, required=True)
     money = db.IntField(min_value=0, max_value=1000, required=True)
-    cards = db.ListField(db.StringField(max_length=2))
+    cards = db.ListField(db.StringField())
     status = db.StringField(required=True)
     status_code = db.IntField(required=True)
     bet = db.IntField(required=True)

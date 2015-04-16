@@ -54,13 +54,14 @@ def tables(table_name):
 			if is_in_table(request.form['username'], requested_table):
 				return json.dumps(wait_your_damn_turn)
 			return json.dumps(join_the_game)
-
 		#implicit else
 		if cmd == 'hit':
 			return hit(request.form['username'], requested_table)
 		elif cmd == 'stay':
 			return stay(request.form['username'], requested_table)
 		elif cmd == 'bet':
+			if not 'bet_amt' in request.form:
+				return json.dumps(give_bet_amt)
 			return bet(request.form['username'], request.form['bet_amt'], requested_table)
 		elif cmd == 'start':
 			return start(request.form['username'], requested_table)

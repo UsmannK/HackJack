@@ -34,7 +34,7 @@ def find_table(table_name):
 	return None
 
 def is_player_turn(passed_uname, table):
-	return passed_uname == table.turn_name.display_name
+	return passed_uname == table.turn_name
 
 def is_in_table(username, table):
 	for player in table.players:
@@ -271,7 +271,7 @@ def next_turn(table):
 
 def new_card(table):
 	card = card_vals[randint(0,len(card_vals)-1)] + card_suits[randint(0,len(card_suits)-1)]
-	while table.drawn_cards.count(card) < 3:
+	while table.drawn_cards.count(card) > 0:
 		card = card_vals[randint(0,len(card_vals)-1)] + card_suits[randint(0,len(card_suits)-1)]
 	table.drawn_cards.append(card)
 	table.save()

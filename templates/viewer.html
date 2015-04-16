@@ -1,0 +1,75 @@
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Hackjack</title>
+
+	<script src="//use.typekit.net/ibh0kdt.js"></script>
+	<script>try{Typekit.load();}catch(e){}</script>
+
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+	<link rel="stylesheet" href="/static/base.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+</head>
+<body class="b-midnight-blue">
+	<div class="tableview">
+		{% if table_exists %}
+			<div class="nav">
+				<h1 class="title">{{ table.table_name }}</h1>
+			</div>
+			<div class="content">
+				<div class="row">
+					<div class="col-1">
+						<div class="box">
+							<div class="box-header">
+								<h2 class="title">DEALER</h2>
+							</div>
+							<div class="box-body">
+								<div class="cards">
+									<div class="wrapper">
+										<div class="card rendercard" data-value="{{ table.dealer.cards[0] }}"></div>
+										<div class="card rendercard hidden" data-value="{{ table.dealer.cards[1] }}"></div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="box">
+							<div class="box-header">
+								<h2 class="title">LOGS</h2>
+							</div>
+							<div class="box-body">
+								logs n shit
+							</div>
+						</div>
+					</div>
+					<div class="col-2">
+						<div class="wrapper">
+							<div class="players">
+								{% for player in table.players %}
+									<div class="box">
+										<div class="box-header">
+											<h2 class="title">{{ player.display_name }}</h2>
+										</div>
+										<div class="box-body">
+											<div class="cards">
+												<div class="wrapper">
+													<div class="card rendercard" data-value="{{ player.cards[0] }}"></div>
+													<div class="card rendercard hidden" data-value="{{ player.cards[1] }}"></div>
+												</div>
+											</div>
+										</div>
+									</div>
+								{% endfor %}
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		{% else %}
+			<h1>No table :(</h1>
+		{% endif %}
+	</div>
+	<script src="/static/render.js"></script>
+</body>
+</html>

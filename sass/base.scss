@@ -1,0 +1,297 @@
+@import "bourbon/bourbon";
+@import "reset";
+
+// Greens
+$colors: (turquoise #1ABC9C) (green-sea #16A085) (emerald #2ECC71) (nephritis #27AE60) (peter-river #3498DB) (belize-hole #2980B9) (wet-asphalt #34495E) (midnight-blue #2C3E50) (amethyst #9B59B6) (wisteria #8E44AD) (sunflower #F1C40F) (orange #F39C12) (carrot #E67E22) (pumpkin #D35400) (alizarin #E74C3C) (pomegranate #C0392B) (clouds #ECF0F1) (silver #BDC3C7) (concrete #95A5A6) (asbestos #7F8C8D);
+
+@each $color in $colors {
+    $name: nth($color, 1);
+    $hex: nth($color, 2);
+
+    .t-#{$name} {
+        color: $hex;
+    }
+    .b-#{$name} {
+        background-color: $hex;
+    }
+}
+
+@function color($name) {
+    @each $color in $colors {
+        @if nth($color, 1) == $name {
+            @return nth($color, 2);
+        }
+    }
+    @return #000;
+}
+
+// Poker
+$pgreen: #01401C;
+$pred: #D9183B;
+$pblack: #02050D;
+$pgreendark: #012611;
+$pgreenlight: #167B43;
+
+
+html {
+    font-family: "futura-pt";
+}
+
+input {
+    background-color: color(clouds);
+    border: none;
+    border-radius: 6px;
+    outline: none;
+}
+
+.container {
+    width: 36em;
+    max-width: 90vw;
+    margin: 0 auto;
+    height: 100%;
+
+    #image-lg {
+        width: 50%;
+        margin: 20% 25% 0;
+    }
+
+    h1 {
+        font-size: 3.6em;
+        text-align: center;
+        margin: 0;
+    }
+
+    p {
+        text-align: center;
+        margin: 2em 0 0.25em;
+    }
+
+    .input-btn {
+        position: relative;
+        width: 18em;
+        max-width: 100%;
+        padding: 0 2.4em 0 0;
+        box-sizing: border-box;
+        margin: 0 auto;
+        height: 2.4em;
+
+        input {
+            display: inline-block;
+            font-size: 1.4em;
+            width: 100%;
+            height: 100%;
+            padding: 0.2em 0.4em;
+            box-sizing: border-box;
+            border-radius: 6px 0 0 6px;
+            float: left;
+            opacity: 0.25;
+            @include transition(all 0.25s ease);
+
+            &:focus {
+                opacity: 1.0;
+            }
+        }
+
+        button {
+            position: absolute;
+            right: 0;
+            padding: 0.2em 0;
+            display: inline-block;
+            width: 2.4em;
+            height: 100%;
+            float: right;
+            border: 0;
+            border-radius: 0 6px 6px 0;
+            background-color: color(orange);
+            @include transition(all 0.25s ease);
+
+            &:hover {
+                background-color: tint(color(orange), 10%);
+            }
+
+            &:focus {
+                background-color: shade(color(orange), 10%);
+            }
+        }
+
+    }
+}
+
+.tableview {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+
+    .nav {
+        width: 100%;
+        height: 4em;
+        background-color: color(clouds);
+        padding: 0.8em;
+        box-sizing: border-box;
+
+        .title {
+            text-align: center;
+            width: 100%;
+            margin: 0;
+            font-weight: 200;
+            color: color(midnight-blue);
+        }
+    }
+
+    .content {
+        width: 100%;
+        padding: 2em;
+        box-sizing: border-box;
+
+        .row {
+            position: relative;
+            display: flex;
+
+
+            .col-1 {
+                display: inline-block;
+                flex: 3;
+                float: left;
+                padding-right: 1em;
+                box-sizing: border-box;
+            }
+            .col-2 {
+                display: inline-block;
+                flex: 9;
+                float: left;
+                padding-left: 1em;
+                box-sizing: border-box;
+
+                .wrapper {
+
+                    .players {
+                        display: flex;
+                        flex-wrap: wrap;
+                        margin-right: -2em;
+
+                        .box {
+                            flex-grow: 1;
+                            min-width: 33%;
+                            max-width: 33%;
+                            width: auto;
+                            padding-right: 2em;
+                            box-sizing: border-box;
+                            background: none;
+
+                            // &:nth-child(3n) {
+                            //     padding-right: 0;
+                            // }
+
+                            .box-header {
+                                background-color: color(silver);
+                            }
+                            .box-body {
+                                background-color: color(clouds);
+                                width: 100%;
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+.box {
+    width: 100%;
+    background-color: color(clouds);
+    margin: 0;
+    margin-bottom: 2em;
+
+    .box-header {
+        width: 100%;
+        height: 4em;
+        background-color: color(orange);
+        padding: 0.8em 1em;
+        box-sizing: border-box;
+
+        .title {
+            font-size: 2em;
+            margin: 0;
+        }
+    }
+
+    .cards {
+        padding: 1em;
+        box-sizing: border-box;
+
+        .wrapper {
+            position: relative;
+
+            .card {
+                position: absolute;
+                width: 45%;
+                background-color: white;
+                border-radius: 6px;
+                box-shadow: 0 0 10px color(concrete);
+                // background-image: url('/static/images/logo.svg');
+                // background-repeat: no-repeat;
+                // background-position: center;
+                // background-size: 50%;
+                
+                &:nth-child(1) {
+                    top: 0;
+                    left: 0;
+                }
+                &:nth-child(2) {
+                    top: 0;
+                    right: 0;
+                }
+
+                &.extracard {
+                    position: absolute;
+                    top: 36px;
+                    left: 0;
+                    width: 45%;
+                }
+
+                &.hidden::after {
+                    content: "";
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background-color: color(midnight-blue);
+                    background-image: url('/static/images/logo.svg');
+                    background-repeat: no-repeat;
+                    background-position: center;
+                    background-size: 50%;
+                    border-radius: 6px;
+                    opacity: 0.9;
+                }
+
+                &.redCard {
+                    color: color(alizarin);
+                }
+                &.blackCard {
+                    color: black;
+                }
+
+                &:first-child {
+                    margin-right: 5%;
+                }
+
+                span:nth-child(1) {
+                    position: absolute;
+                    top: 0.25em;
+                    left: 0.35em;
+                    font-size: 1.8em;
+                }
+
+                span:nth-child(2) {
+                    position: absolute;
+                    bottom: 0.25em;
+                    right: 0.35em;
+                    font-size: 1.8em;
+                }
+            }
+        }
+    }
+}

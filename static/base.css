@@ -622,8 +622,7 @@ input {
           background-repeat: no-repeat;
           background-position: center;
           background-size: 50%;
-          border-radius: 6px;
-          opacity: 0.9; }
+          border-radius: 6px; }
         .box .cards .wrapper .card.redCard {
           color: #E74C3C; }
         .box .cards .wrapper .card.blackCard {

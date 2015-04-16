@@ -189,7 +189,7 @@ def bet(username, amount, table):
 	for player in table.players:
 		if player.display_name == username:
 			cur_player = player
-	if table.status_code not 1:
+	if table.status_code != 1:
 		return json.dumps(cant_bet_placed)
 	if amount > cur_player.money:
 		return json.dumps(cant_bet_too_little_money)
@@ -311,7 +311,7 @@ def end_round(table):
 
 	if table.curStart == len(table.players)-1:
 		table.curStart = 0
-	else
+	else:
 		table.curStart += 1
 	table.save()
 	start_new_round(table) #TODO
@@ -354,7 +354,7 @@ def card_eval(card_list):
 	num_ace = 0
 	for card in card_list:
 		if card[0] == 'A':
-			num_ace++
+			num_ace += 1
 			tot_val += 11
 		elif len(card) == 2 and ord(card[0]) <= ord('9'):
 			tot_val += ord(card[0])-ord('0')

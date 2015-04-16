@@ -8,7 +8,9 @@ import urlparse
 
 app = Flask(__name__)
 
-mongolab_uri = 'mongodb://heroku_app35754647:im670d7fgb25cq1363ti2stguk@ds061691.mongolab.com:61691/heroku_app35754647?replicaSet=rs-ds061691'#environ.get('MONGOLAB_URI')
+mongolab_uri = 'mongodb://heroku_app35754647:im670d7fgb25cq1363ti2stguk@ds061691.mongolab.com:61691/heroku_app35754647?replicaSet=rs-ds061691'
+
+#environ.get('MONGOLAB_URI')
 # if mongolab_uri:
 #     url = urlparse.urlparse(mongolab_uri)
 #     app.config.setdefault('MONGODB_USER', url.username)

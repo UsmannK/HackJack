@@ -61,7 +61,7 @@ var getData = function(cb) {
 }
 
 var refresh = function(data) {
-	$('.json-beautify').html(JSON.stringify(data, undefined, 4));
+	$('.json-beautify').html($('.json-beautify').html() + '\n========\n' + JSON.stringify(data, undefined, 4));
 
 	$('#dealerBox').html(renderDealerHtml(data.dealer));
 	render();

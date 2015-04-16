@@ -160,6 +160,11 @@ input {
                     padding: 1em;
                     box-sizing: border-box;
                     overflow: scroll;
+                    max-height: 30em;
+
+                    pre {
+                        font-size: 0.75em;
+                    }
                 }
             }
             .col-2 {

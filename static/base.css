@@ -543,7 +543,10 @@ input {
           width: 100%;
           padding: 1em;
           box-sizing: border-box;
-          overflow: scroll; }
+          overflow: scroll;
+          max-height: 30em; }
+          .tableview .content .row .col-1 .table-object pre {
+            font-size: 0.75em; }
       .tableview .content .row .col-2 {
         display: inline-block;
         -webkit-box-flex: 9;

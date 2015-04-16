@@ -34,7 +34,7 @@ def find_table(table_name):
 	return None
 
 def is_player_turn(passed_uname, table):
-	return passed_uname == table.turn_name.display_name
+	return passed_uname == table.turn_name
 
 def is_in_table(username, table):
 	for player in table.players:

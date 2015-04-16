@@ -21,7 +21,7 @@ def tables(table_name):
 
 	#GET routing
 	if request.method == 'GET':
-		if requested_table is None:
+		if requested_table == None:
 			return json.dumps(table_not_found)
 		else:
 			return serialize_table(requested_table)
@@ -39,17 +39,17 @@ def tables(table_name):
 
 
 		if not 'command' in request.form:
-			return json.dumps('supply_command')
+			return json.dumps(supply_command)
 		cmd = request.form['command']
 
 		if requested_table is None:
-			if cmd is 'create':
+			if cmd == 'create':
 				return create(request.form['username'], table_name)
 			return json.dumps(table_not_found)
 
 		#implicit else:
 		if not is_player_turn(request.form['username'], requested_table):
-			if cmd is 'join':
+			if cmd == 'join':
 				join(request.form['username'], requested_table)
 			if is_in_table(request.form['username'], requested_table):
 				return json.dumps(wait_your_damn_turn)

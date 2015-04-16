@@ -1,4 +1,5 @@
 table_not_found = {'error':'table not found'}
+supply_command = {'error':'supply a command'}
 provide_auth = {'error':'you must provide both a username and a password'}
 wait_your_damn_turn = {'error':'it\'s not your turn'}
 wait_your_damn_turn = {'error':'you must supply a command'}

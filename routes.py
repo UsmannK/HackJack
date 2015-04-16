@@ -1,6 +1,6 @@
 import os
 import logging
-from flask import Flask, request, abort
+from flask import Flask, request, abort, render_template
 from hackjack.models import *
 import json
 from hackjack.consts import *
@@ -12,6 +12,21 @@ app = Flask(__name__)
 stream_handler = logging.StreamHandler()
 stream_handler.setLevel(logging.INFO)
 app.logger.addHandler(stream_handler)
+
+@app.route("/")
+def index():
+	return render_template('index.html')
+
+@app.route("/viewer/<table_name>")
+def viewer(table_name):
+
+	requested_table = find_table(table_name)
+
+	#If table doesn't exist
+	if requested_table == None:
+		return render_template('viewer.html', table=requested_table, table_exists=False)
+	else:
+		return render_template('viewer.html', table=requested_table, table_exists=True)
 
 
 @app.route("/tables/<table_name>", methods=['POST', 'GET'])

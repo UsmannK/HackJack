@@ -12,7 +12,7 @@ class Player(db.EmbeddedDocument):
     doubled_down=db.BooleanField(required=True)
 
 class Dealer(db.EmbeddedDocument):
-    cards=db.ListField(db.StringField(max_length=2, required=True), required=True)
+    cards=db.ListField(db.StringField(max_length=3, required=True), required=True)
     flipped = db.BooleanField(required=True)
 
 class Table(db.Document):

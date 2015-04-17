@@ -306,7 +306,8 @@ def next_turn(table):
 	# 	if not table.players[0].status_code == 2:
 	# 		end_round(table)
 	# 	return
-
+	table.turn_id += 1
+	turn_id = table.turn_id
 	anyone_playing = False
 	for player in table.players:
 		if player.status_code == 3:
@@ -323,6 +324,8 @@ def next_turn(table):
 			table.turn_name = player.display_name
 			player.status_code = 2
 			player.status=player_status_codes[player.status_code]
+			t = Timer(10.0, stayTimed, [player.display_name,table],turn_id)
+			t.start()
 			#player.save()
 			table.save()
 			return
@@ -336,11 +339,31 @@ def next_turn(table):
 			table.turn_name = player.display_name
 			player.status_code = 2
 			player.status=player_status_codes[player.status_code]
+			t = Timer(10.0, stayTimed, [player.display_name,table],turn_id)
+			t.start()
 			#player.save()
 			table.save()
 			return
 
-#def dealer_turn(table):
+
+def stayTimed(username, table, turnNum):
+	cur_player = None
+	for player in table.players:
+		if player.display_name == username:
+			cur_player = player
+
+	if not cur_player.status_code == 2:
+		return
+
+	if table.turn_id == turnNum:
+		cur_player.status_code = 4
+		cur_player.status=player_status_codes[cur_player.status_code]
+		#cur_player.save()
+		table.save()
+
+		next_turn(table)
+	return
+
 
 def new_card(table):
 	card = card_vals[randint(0,len(card_vals)-1)] + card_suits[randint(0,len(card_suits)-1)]
@@ -386,7 +409,7 @@ def end_round(table):
 		player.bet = 0
 		#player.save()
 
-		
+
 
 	for usrnm in table.waiting_players:
 		cur_user = None

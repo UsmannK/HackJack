@@ -29,6 +29,7 @@ class Table(db.Document):
     dealer = db.EmbeddedDocumentField('Dealer')
     waiting_players = db.ListField(db.StringField())
     leaving_players = db.ListField(db.StringField())
+    turn_id = db.IntField(default=0,required=True)
 
 class User(db.Document):
     display_name = db.StringField(required=True)

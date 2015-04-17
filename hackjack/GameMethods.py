@@ -57,13 +57,21 @@ def deal_cards(table):
 	dealer.save()
 	table.save()
 
-def check_bets_and_continue(table):
+def check_bets_and_continue(table_name):
+	tables = Table.objects
+	table = None
+	for c_table in tables:
+		if c_table.table_name == table_name:
+			table = c_table
+
 	players = table.players
 	for player in players:
 		if player.status_code == 1:
 			player.status_code=3
 			player.status=player_status_codes[player.status_code]
+			print "outtere??"
 			if player.bet == 0:
+				print "innere??"
 				player.bet = table.min_bet
 				player.money -= player.bet
 				#player.save()
@@ -149,7 +157,7 @@ def start(username, table):
 	# print "5"
 	table.save()
 	# print "6"
-	t = Timer(15.0, check_bets_and_continue, [table])
+	t = Timer(15.0, check_bets_and_continue, [table.table_name])
 	t.start()
 	# check_bets_and_continue(table)
 	return json.dumps(success_table_started)
@@ -268,7 +276,6 @@ def bet(username, amount, table):
 
 	player.status_code=3
 	player.status=player_status_codes[player.status_code]
-	#player.save()
 	table.save()
 	return serialize_table(table)
 
@@ -324,7 +331,7 @@ def next_turn(table):
 			table.turn_name = player.display_name
 			player.status_code = 2
 			player.status=player_status_codes[player.status_code]
-			t = Timer(10.0, stayTimed, [player.display_name,table],turn_id)
+			t = Timer(10.0, stayTimed, [player.display_name,table.table_name],turn_id)
 			t.start()
 			#player.save()
 			table.save()
@@ -346,7 +353,14 @@ def next_turn(table):
 			return
 
 
-def stayTimed(username, table, turnNum):
+def stayTimed(username, table_name, turnNum):
+
+	tables = Table.objects
+	table = None
+	for c_table in tables:
+		if c_table.table_name == table_name:
+			table = c_table
+
 	cur_player = None
 	for player in table.players:
 		if player.display_name == username:
@@ -443,7 +457,10 @@ def end_round(table):
 		cur_user.save()
 		table.players.remove(cur_player)
 		table.leaving_players.remove(usrnm)
-
+		if len(table.players) == 0:
+			table.delete()
+		else:
+			table.save()
 
 	if table.curStart == len(table.players)-1:
 		table.curStart = 0
@@ -475,13 +492,13 @@ def start_new_round(table):
 			#player.save()
 			playersLeft.append(player)
 
-	if len(playersLeft) == 1:
-		playersLeft[0].status_code = 8
-		playersLeft[0].status = player_status_codes[playersLeft[0].status_code]
-		table.table_status_code = 4
-		table.table_status = table_status_codes[table.table_status_code]
-		table.save()
-		return
+	# if len(playersLeft) == 1:
+	# 	playersLeft[0].status_code = 8
+	# 	playersLeft[0].status = player_status_codes[playersLeft[0].status_code]
+	# 	table.table_status_code = 4
+	# 	table.table_status = table_status_codes[table.table_status_code]
+	# 	table.save()
+	# 	return
 
 	table.table_status_code=1
 	table.table_status=table_status_codes[table.table_status_code]
@@ -490,7 +507,7 @@ def start_new_round(table):
 	#table.min_bet += 5
 	table.save()
 	#deal_cards(table)
-	t = Timer(15.0, check_bets_and_continue, [table])
+	t = Timer(15.0, check_bets_and_continue, [table.table_name])
 	t.start()
 
 def card_eval(card_list):

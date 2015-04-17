@@ -4,6 +4,7 @@ unknown_command = {'error':'command not recognized'}
 provide_auth = {'error':'you must provide both a username and a password'}
 wait_your_damn_turn = {'error':'it\'s not your turn'}
 queue = {'error':'it\'s not your turn'}
+must_admin_to_create = {'error':'only admins can create tables'}
 add_to_waitlist = {'success':'you will join as soon as a new round starts'}
 add_to_leavelist = {'success':'you will leave as soon as a new round starts'}
 left_success = {'success':'you have left the table'}

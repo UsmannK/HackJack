@@ -48,6 +48,10 @@ def tables(table_name):
 		else:
 			return serialize_table(requested_table)
 
+	##### CHANGE AT FINALS ###
+	is_admin = True
+	##### END CGANGE ####
+
 	#POST routing
 	if request.method == 'POST':
 		if 'username' not in request.form or 'password' not in request.form:
@@ -55,6 +59,8 @@ def tables(table_name):
 		if 'admin' in request.form and 'password' in request.form:
 			if not authenticate(request.form['admin'], request.form['password']):
 				abort(401)
+			else:
+				is_admin = True
 		else:
 			if not authenticate(request.form['username'], request.form['password']):
 				abort(401)
@@ -66,7 +72,10 @@ def tables(table_name):
 		cmd = request.form['command']
 		if requested_table == None:
 			if cmd == 'create':
-				return create(request.form['username'], table_name)
+				if is_admin:
+					return create(request.form['username'], table_name)
+				else:
+					return json.dumps(must_admin_to_create)
 			return json.dumps(table_not_found)
 
 		if cmd == 'destroy' and 'admin' in request.form:

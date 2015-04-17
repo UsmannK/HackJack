@@ -27,10 +27,15 @@ class Table(db.Document):
     min_bet = db.IntField(min_value=5, required=True)
     drawn_cards = db.ListField(db.StringField())
     dealer = db.EmbeddedDocumentField('Dealer')
+    waiting_players = db.ListField(db.StringField())
+    leaving_players = db.ListField(db.StringField())
 
 class User(db.Document):
     display_name = db.StringField(required=True)
     passphrase = db.StringField(required=True)
+    money = db.IntField(required=True)
+    waiting = db.BooleanField(required=True)
+    in_table = db.BooleanField(required=True)
 
 class Admin(db.Document):
     display_name = db.StringField(required=True)

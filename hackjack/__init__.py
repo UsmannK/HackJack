@@ -31,10 +31,6 @@ connect(host=mongolab_uri)
 
 db = MongoEngine(app)
 
-app.config.update(
-    CELERY_BROKER_URL='redis://x:a31d764007e14695bbfe744355d7505e@handsome-sycamore-6643.redisgreen.net:11042/',
-    CELERY_RESULT_BACKEND='redis://x:a31d764007e14695bbfe744355d7505e@handsome-sycamore-6643.redisgreen.net:11042/'
-)
 
 if __name__ == '__main__':
     app.run()

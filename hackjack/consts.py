@@ -1,8 +1,14 @@
 table_not_found = {'error':'table not found'}
 supply_command = {'error':'supply a command'}
+unknown_command = {'error':'command not recognized'}
 provide_auth = {'error':'you must provide both a username and a password'}
 wait_your_damn_turn = {'error':'it\'s not your turn'}
-supply_command = {'error':'you must supply a command'}
+queue = {'error':'it\'s not your turn'}
+add_to_waitlist = {'success':'you will join as soon as a new round starts'}
+add_to_leavelist = {'success':'you will leave as soon as a new round starts'}
+left_success = {'success':'you have left the table'}
+will_leave = {'success':'you have left the table'}
+error_occupied = {'error':'please leave your room before joining another'}
 give_bet_amt = {'error':'you must supply a bet amount'}
 join_the_game = {'error':'you are not in this game'}
 cant_hit = {'error':'you cannot hit this turn (is it your turn?)'}

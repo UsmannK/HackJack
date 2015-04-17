@@ -58,13 +58,18 @@ def tables(table_name):
 
 		if not 'command' in request.form:
 			return json.dumps(supply_command)
-		cmd = request.form['command']
 
+		cmd = request.form['command']
 		if requested_table == None:
 			if cmd == 'create':
 				return create(request.form['username'], table_name)
 			return json.dumps(table_not_found)
 
+		if cmd == 'destroy' and 'admin' in request.form:
+			requested_table.delete()
+			return "destroyed"	
+		if cmd == 'leave':
+				return leave(request.form['username'], requested_table)
 		#implicit else:
 		if not is_player_turn(request.form['username'], requested_table):
 			if cmd == 'join':
@@ -73,6 +78,7 @@ def tables(table_name):
 			elif is_in_table(request.form['username'], requested_table):
 				return json.dumps(wait_your_damn_turn)
 			return json.dumps(join_the_game)
+
 		#implicit else
 		if cmd == 'hit':
 			return hit(request.form['username'], requested_table)
@@ -87,7 +93,7 @@ def tables(table_name):
 		elif cmd == 'double down':
 			return double_down(request.form['username'], requested_table)
 		else:
-			return serialize_table(requested_table)
+			return json.dumps(unknown_command)#serialize_table(requested_table)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

@@ -79,9 +79,16 @@ def check_bets_and_continue(table):
 	return
 
 def create_player(username):
+	cur_user = None
+	users = User.objects
+	for user in users:
+		if user.display_name == username:
+			cur_user = user
+
 	player = Player()
 	player.display_name = username
-	player.money = 100
+	player.money = cur_user.money
+	player.in_table = True
 	player.cards = []
 	player.status_code=0
 	player.status = player_status_codes[player.status_code]
@@ -93,9 +100,16 @@ def create_player(username):
 
 def create(username, table_name):
 	#Initialize table admin
+	cur_user = None
+	users = User.objects
+	for user in users:
+		if user.display_name == username:
+			cur_user = user
+
 	table_admin = Player()
+	table_admin.in_table = True
 	table_admin.display_name = username
-	table_admin.money = 100
+	table_admin.money = cur_user.money
 	table_admin.cards = []
 	table_admin.status_code=0
 	table_admin.status = player_status_codes[table_admin.status_code]
@@ -104,6 +118,8 @@ def create(username, table_name):
 
 	#Initialize table
 	table = Table()
+	table.waiting_players = []
+	table.leaving_players = []
 	table.table_name = table_name
 	table.table_admin_name = username
 	table.table_status_code = 0
@@ -133,19 +149,63 @@ def start(username, table):
 	# print "5"
 	table.save()
 	# print "6"
-	# t = Timer(15.0, check_bets_and_continue(table))
-	# t.start()
-	check_bets_and_continue(table)
+	t = Timer(15.0, check_bets_and_continue, [table])
+	t.start()
+	# check_bets_and_continue(table)
 	return json.dumps(success_table_started)
 
 def join(username, table):
 	# table = find_table(table_name)
-	if not table.table_status_code == 0:
-		return json.dumps(game_in_progress_join)
+	cur_user = None
+	users = User.objects
+	for user in users:
+		if user.display_name == username:
+			cur_user = user
 
+	if cur_user.in_table or cur_user.waiting:
+		return json.dumps(error_occupied)
+
+	if not table.table_status_code == 0:
+		table.waiting_players.append(username)
+		cur_user.waiting = True
+		cur_user.save()
+		table.save()
+		return add_to_waitlist
+
+	cur_user.in_table = True
 	table.players.append(create_player(username))
 	table.save()
 	return serialize_table(table)
+
+def leave(username, table):
+	cur_user = None
+	users = User.objects
+	for user in users:
+		if user.display_name == username:
+			cur_user = user
+
+	cur_player = None
+	players = table.players
+	for player in players:
+		if player.display_name == username:
+			cur_player = player
+
+	if table.table_status_code != 1 and table.table_status_code != 2:
+		if cur_user.in_table and cur_player != None:
+			cur_user.money = cur_player.money
+		cur_user.in_table = False
+		cur_user.waiting = False
+		cur_user.save()
+		table.players.remove(cur_player)
+		if len(table.players) == 0:
+			table.delete()
+		else:
+			table.save()
+		return json.dumps(left_success)
+	table.leaving_players.append(username)
+	table.save()
+	return json.dumps(add_to_leavelist)
+
 
 def hit(username, table):
 	cur_player = None
@@ -242,10 +302,10 @@ def double_down(username, table):
 	return serialize_table(table)
 
 def next_turn(table):
-	if len(table.players) == 1:
-		if not table.players[0].status_code == 2:
-			end_round(table)
-		return
+	# if len(table.players) == 1:
+	# 	if not table.players[0].status_code == 2:
+	# 		end_round(table)
+	# 	return
 
 	anyone_playing = False
 	for player in table.players:
@@ -293,8 +353,11 @@ def new_card(table):
 def end_round(table):
 	dealer = table.dealer
 	dealer.flipped = False
-	table.table_status_code=1
+	table.table_status_code=3
 	table.table_status=table_status_codes[table.table_status_code]
+
+	# table.save()
+	# return serialize_table(table)
 
 	while card_eval(dealer.cards) < 17:
 		dealer.cards.append(new_card(table))
@@ -322,6 +385,42 @@ def end_round(table):
 
 		player.bet = 0
 		#player.save()
+
+		
+
+	for usrnm in table.waiting_players:
+		cur_user = None
+		users = User.objects
+		for user in users:
+			if user.display_name == usrnm:
+				cur_user = user
+
+		cur_user.in_table = True
+		cur_user.waiting = False
+		table.players.append(create_player(usrnm))
+		table.waiting_players.remove(usrnm)
+		cur_user.save()
+
+
+	for usrnm in table.leaving_players:
+		cur_player = None
+		for player in table.players:
+			if player.display_name == usrnm:
+				cur_player = player
+
+		cur_user = None
+		users = User.objects
+		for user in users:
+			if user.display_name == usrnm:
+				cur_user = user
+
+		cur_user.in_table = False
+		cur_user.waiting = False
+		cur_user.money = cur_player.money
+		cur_user.save()
+		table.players.remove(cur_player)
+		table.leaving_players.remove(usrnm)
+
 
 	if table.curStart == len(table.players)-1:
 		table.curStart = 0
@@ -361,10 +460,15 @@ def start_new_round(table):
 		table.save()
 		return
 
-	table.min_bet += 5
+	table.table_status_code=1
+	table.table_status=table_status_codes[table.table_status_code]
+	table.dealer.cards=[]
+
+	#table.min_bet += 5
 	table.save()
 	#deal_cards(table)
-	check_bets_and_continue(table)
+	t = Timer(15.0, check_bets_and_continue, [table])
+	t.start()
 
 def card_eval(card_list):
 	tot_val = 0

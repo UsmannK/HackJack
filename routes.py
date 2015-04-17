@@ -17,16 +17,19 @@ app.logger.addHandler(stream_handler)
 def index():
 	return render_template('index.html')
 
-@app.route("/viewer/<table_name>")
+@app.route("/viewer/<table_name>", methods=['POST', 'GET'])
 def viewer(table_name):
 
 	requested_table = find_table(table_name)
+
+	if request.method == 'POST':
+		return serialize_table(requested_table)
 
 	#If table doesn't exist
 	if requested_table == None:
 		return render_template('viewer.html', table=requested_table, table_exists=False)
 	else:
-		return render_template('viewer.html', table=requested_table, table_exists=True)
+		return render_template('viewer.html', table=requested_table, table_object=serialize_table(requested_table), table_exists=True)
 
 
 @app.route("/tables/<table_name>", methods=['POST', 'GET'])

@@ -87,8 +87,10 @@ var renderDealerHtml = function(dealer) {
 		dealer.cards.forEach(function(card, index, array) {
 			if (card === 'secret')
 				dealerHtml += '					<div class="card hidden"></div>';
-			else
+			else if (index < 2)
 				dealerHtml += '					<div class="card rendercard" data-value="'+card+'"></div>';
+			else
+				dealerHtml += '					<div class="card rendercard" style="top: '+36*(index-1)+'px;" data-value="'+card+'"></div>';
 		});
 		dealerHtml += '				</div>';
 		dealerHtml += '			</div>';

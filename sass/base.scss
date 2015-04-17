@@ -253,10 +253,6 @@ input {
                 background-color: white;
                 border-radius: 6px;
                 box-shadow: 0 0 10px color(concrete);
-                // background-image: url('/static/images/logo.svg');
-                // background-repeat: no-repeat;
-                // background-position: center;
-                // background-size: 50%;
                 
                 &:nth-child(1) {
                     top: 0;
@@ -307,6 +303,34 @@ input {
                     font-size: 1.8em;
                 }
             }
+        }
+    }
+}
+
+.documentation{
+    h1 {
+        width: auto;
+        font-weight: 200;
+        color: color(orange);
+        text-transform: uppercase;
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+    .section {
+        background-color: color(clouds);
+        padding: 1em;
+        text-align: left;
+        margin-bottom: 1em;
+        h2 {
+            margin: 0;
+            color: color(orange);
+            text-transform: uppercase;
+            border-bottom: 3px solid color(orange);
+            margin-bottom: 0.25em;
+        }
+        p {
+            text-align: left;
+            margin: 0;
         }
     }
 }

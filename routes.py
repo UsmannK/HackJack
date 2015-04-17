@@ -17,6 +17,10 @@ app.logger.addHandler(stream_handler)
 def index():
 	return render_template('index.html')
 
+@app.route("/docs")
+def documentation():
+	return render_template('documentation.html')
+
 @app.route("/viewer/<table_name>", methods=['POST', 'GET'])
 def viewer(table_name):
 

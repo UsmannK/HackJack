@@ -2,4 +2,3 @@ venv
 *.pyc
 staticfiles
 node_modules
-.DS_Store

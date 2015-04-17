@@ -66,7 +66,8 @@ def tables(table_name):
 		if not is_player_turn(request.form['username'], requested_table):
 			if cmd == 'join':
 				join(request.form['username'], requested_table)
-			if is_in_table(request.form['username'], requested_table):
+				return serialize_table(requested_table)
+			elif is_in_table(request.form['username'], requested_table):
 				return json.dumps(wait_your_damn_turn)
 			return json.dumps(join_the_game)
 		#implicit else
